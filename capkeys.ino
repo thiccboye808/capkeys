@@ -1,15 +1,12 @@
-// capacitive sense keyboard
+// capacitive sense keys
 //
 // by thiccboye808/kerochan
 //
 // enters keypresses when a touch is sensed 
-// on connected coins]
+// on connected conductors, coins r recomended
 //
 // use 1m ohm resitors between send and receive pins for
 // each "key"
-//
-// could b used on anything with capacitive qualites
-// but coins work great for thisW
 
 //#define DEBUG_MODE // switches keyboard for serial output
 
@@ -17,21 +14,21 @@
 #ifndef DEBUG_MODE
 #include <Keyboard.h>
 #endif
-const uint8_t SENSOR_NUM = 2; // number of sensors (duh)
+const uint8_t SENSOR_NUM = 2; // number of sensors
 const long THR = 1000; // may or may not need tuning
 const int ENPIN = 7; // enable pin
 const char KEYS[ SENSOR_NUM ] = { 'z', 'x' };
 CapacitiveSensor sensors[ SENSOR_NUM ] = { CapacitiveSensor( 3, 4 ), CapacitiveSensor( 6, 5 ) };
 long values[ SENSOR_NUM ];
 
-// metro m0 express only
-#define METRO_NEO_PIXEL
-#ifdef METRO_NEO_PIXEL
-#define NEO_PIXEL_PIN 40
-#define NEO_PIXEL_ON Color( 0, 15, 0 )
-#define NEO_PIXEL_OFF Color( 15, 0, 0 )
+// neopixel status indicator
+//#define NEOPIXEL
+#ifdef NEOPIXEL
+#define NEOPIXEL_PIN 40
+#define NEOPIXEL_ON Color( 0, 15, 0 )
+#define NEOPIXEL_OFF Color( 15, 0, 0 )
 #include <Adafruit_NeoPixel.h>
-Adafruit_NeoPixel pixel = Adafruit_NeoPixel( 1, NEO_PIXEL_PIN, NEO_GRB + NEO_KHZ800 );
+Adafruit_NeoPixel pixel = Adafruit_NeoPixel( 1, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800 );
 #endif
 
 void setup() 
@@ -42,7 +39,7 @@ void setup()
 #else
   Keyboard.begin();
 #endif
-#ifdef METRO_NEO_PIXEL
+#ifdef NEOPIXEL
   pixel.begin();
 #endif
 }
@@ -52,7 +49,7 @@ void loop()
   long start = millis();
   for( uint8_t i = 0; i < SENSOR_NUM; i ++ )
    values[ i ] = sensors[ i ].capacitiveSensor( 10 );
-#ifdef METRO_NEO_PIXEL
+#ifdef NEOPIXEL
   pixel.clear();
 #endif
   if( digitalRead( ENPIN ) )
@@ -76,11 +73,11 @@ void loop()
       else
         Keyboard.press( KEYS[ i ] );
 #endif
-#ifdef METRO_NEO_PIXEL
-    pixel.setPixelColor( 0, pixel.NEO_PIXEL_ON );
+#ifdef NEOPIXEL
+    pixel.setPixelColor( 0, pixel.NEOPIXEL_ON );
   }
   else
-    pixel.setPixelColor( 0, pixel.NEO_PIXEL_OFF );
+    pixel.setPixelColor( 0, pixel.NEOPIXEL_OFF );
   pixel.show();
 #else
   }
