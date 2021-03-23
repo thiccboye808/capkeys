@@ -6,7 +6,6 @@ Flexible arduino project for capacitive sense key mapping over usb.
 
 * `SENSOR_NUM` sets number of sensors.
 * `THR` is the threshold level needed for a keypress.
-* `ENPIN` is the pin that enables running sensing code.
 * `KEYS`  is a key map array for keyboard input.
 * `sensors` is an array of capacitive sensor library definitions.
 * `values` is an array of values updated every loop.
@@ -14,7 +13,6 @@ Flexible arduino project for capacitive sense key mapping over usb.
 ```Cpp
 const uint8_t SENSOR_NUM = 2; // number of sensors
 const long THR = 1000; // may or may not need tuning
-const int ENPIN = 7; // enable pin
 const char KEYS[ SENSOR_NUM ] = { 'z', 'x' };
 CapacitiveSensor sensors[ SENSOR_NUM ] = { CapacitiveSensor( 3, 4 ), CapacitiveSensor( 6, 5 ) };
 long values[ SENSOR_NUM ];
@@ -22,9 +20,22 @@ long values[ SENSOR_NUM ];
 
 ---
 
+## Enable Pin
+
+Enable Pin allows for an on/off switch. Enabled by default.
+
+Comment `#define ENPIN 7` to disable it in a build. 
+
+```Cpp
+#define ENPIN 7 // allows for an on/off switch
+```
+
+---
+
 ## Debug Mode
 
 Debug mode switches keyboard for serial output over usb.
+
 Uncomment `#define DEBUG_MODE` to enable it in a build. 
 
 ```Cpp
@@ -36,6 +47,7 @@ Uncomment `#define DEBUG_MODE` to enable it in a build.
 ## NeoPixel Support
 
 A neopixel on/off indicator is included.
+Only available with enable pin.
 Uncomment `#define NEOPIXEL` to enable it in a build.
 
 ### Options

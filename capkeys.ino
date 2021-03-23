@@ -16,10 +16,12 @@
 #endif
 const uint8_t SENSOR_NUM = 2; // number of sensors
 const long THR = 1000; // may or may not need tuning
-const int ENPIN = 7; // enable pin
 const char KEYS[ SENSOR_NUM ] = { 'z', 'x' };
 CapacitiveSensor sensors[ SENSOR_NUM ] = { CapacitiveSensor( 3, 4 ), CapacitiveSensor( 6, 5 ) };
 long values[ SENSOR_NUM ];
+
+// enable pin
+#define ENPIN 7 // allows for an on/off switch
 
 // neopixel status indicator
 //#define NEOPIXEL
@@ -33,7 +35,9 @@ Adafruit_NeoPixel pixel = Adafruit_NeoPixel( 1, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ8
 
 void setup() 
 {
+#ifdef ENPIN
   pinMode( ENPIN, INPUT_PULLUP );
+#endif
 #ifdef DEBUG_MODE
   Serial.begin( 9600 );
 #else
@@ -52,8 +56,10 @@ void loop()
 #ifdef NEOPIXEL
   pixel.clear();
 #endif
+#ifdef ENPIN
   if( digitalRead( ENPIN ) )
   {
+#endif
 #ifdef DEBUG_MODE
     Serial.print( millis() - start );
     for( uint8_t i = 0; i < SENSOR_NUM; i ++ )
@@ -73,6 +79,7 @@ void loop()
       else
         Keyboard.press( KEYS[ i ] );
 #endif
+#ifdef ENPIN
 #ifdef NEOPIXEL
     pixel.setPixelColor( 0, pixel.NEOPIXEL_ON );
   }
@@ -81,5 +88,6 @@ void loop()
   pixel.show();
 #else
   }
+#endif
 #endif
 }
